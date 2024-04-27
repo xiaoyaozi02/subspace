@@ -39,33 +39,33 @@ func GetSubspaceMountInfo() (int, string) {
 
 //计算出所有subspace硬盘的总容量
 func GetSubspaceTotalCapacity() (int, error) {
-	// 执行 df -h 命令获取硬盘信息
-	cmd := exec.Command("df", "-h")
-	out, err := cmd.Output()
-	if err != nil {
-		return 0, err
-	}
+// 执行 df -h 命令获取硬盘信息
+cmd := exec.Command("df", "-h")
+out, err := cmd.Output()
+if err != nil {
+	return 0, err
+}
 
-	// 将命令输出转换为字符串
-	output := string(out)
+// 将命令输出转换为字符串
+output := string(out)
 
-	// 按行分割输出
-	lines := strings.Split(output, "\n")
+// 按行分割输出
+lines := strings.Split(output, "\n")
 
-	// 计算总容量
-	totalCapacity := 0
-	for _, line := range lines {
-		if strings.Contains(line, "subspace") {
-			fields := strings.Fields(line)
-			if len(fields) >= 2 {
-				capacityStr := strings.TrimRight(fields[1], "T") // 去掉容量中的单位"T"
-				capacity, err := strconv.Atoi(capacityStr)
-				if err == nil {
-					totalCapacity += capacity
-				}
+// 计算总容量
+totalCapacity := 0
+for _, line := range lines {
+	if strings.Contains(line, "subspace") {
+		fields := strings.Fields(line)
+		if len(fields) >= 2 {
+			capacityStr := strings.TrimRight(fields[1], "T") // 去掉容量中的单位"T"
+			capacity, err := strconv.Atoi(capacityStr)
+			if err == nil {
+				totalCapacity += capacity
 			}
 		}
 	}
+}
 
-	return totalCapacity, nil
+return totalCapacity, nil
 }
