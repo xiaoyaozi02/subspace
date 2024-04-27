@@ -34,8 +34,15 @@ func main() {
 
 	//检查硬盘挂载情况
 	mountCount, totalSize := fdisk.GetSubspaceMountInfo()
-	fmt.Printf("Number of mounted directories containing 'subspace': %d\n", mountCount)
-	fmt.Printf("Total size of mounted directories containing 'subspace': %s\n", totalSize)
+	//计算所有硬盘挂载总和
+	totalCapacity, err := fdisk.GetSubspaceTotalCapacity()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Printf("subspace挂载硬盘数量: %d\n", mountCount)
+	fmt.Printf("subspace单个硬盘容量: %s\n", totalSize)
+	fmt.Printf("subspace硬盘总容量为: %d\n", totalCapacity)
 
 	// 设置初始开始时间为当前时间
 	startTime = time.Now()
