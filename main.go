@@ -13,7 +13,7 @@ import (
 
 	"github.com/rjeczalik/notify"
 )
-
+//更换为您日志所在的目录
 var logDir = "/run/user/1001"
 var keyword = "Successfully"
 var startTime time.Time
