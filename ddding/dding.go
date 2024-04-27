@@ -15,6 +15,7 @@ func SendToDingTalkGroup(message string) {
 		} `json:"text"`
 	}
 
+	//修改为你的dingding机器人url
 	dingTalkURL := "https://oapi.dingtalk.com/robot/send?access_token=0cb614a04259e375d7a1e2a89879f06dbd8fca755d465598ca7e5673dcca2090"
 
 	dingTalkMsg := DingTalkMessage{

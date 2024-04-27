@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"jk_hash/ddding"
+	"jk_hash/fdisk"
 	"jk_hash/ip"
 	"log"
 	"os"
@@ -14,6 +15,7 @@ import (
 	"github.com/rjeczalik/notify"
 )
 
+//更改为你日志文件的所在目录
 var logDir = "/run/user/1001"
 var keyword = "Successfully"
 var startTime time.Time
@@ -30,16 +32,20 @@ func main() {
 
 	fmt.Println("本机IP: ", ip.GetLoacalIPAddresses())
 
+	//检查硬盘挂载情况
+	mountCount, totalSize := fdisk.GetSubspaceMountInfo()
+	fmt.Printf("Number of mounted directories containing 'subspace': %d\n", mountCount)
+	fmt.Printf("Total size of mounted directories containing 'subspace': %s\n", totalSize)
+
 	// 设置初始开始时间为当前时间
 	startTime = time.Now()
-
 	// 定时任务，每隔1分钟检查一次
 	ticker := time.NewTicker(1 * time.Minute)
 	for range ticker.C {
 		// 检查是否已经过去了24小时
 		if time.Since(startTime) >= 24*time.Hour {
 			ipAddress := ip.GetLoacalIPAddresses()
-			message := fmt.Sprintf("本机IP:%v\n 5小时内爆块: %v 次 \n Local IP: %s",ipAddress, currentCount-previousCount, ipAddress)
+			message := fmt.Sprintf("本机IP:%v\n 24小时内爆块: %v 次 \n Local IP: %s",ipAddress, currentCount-previousCount, ipAddress)
 			ddding.SendToDingTalkGroup(message)
 
 			// 保存当前周期的统计结果作为上一个周期的统计结果
