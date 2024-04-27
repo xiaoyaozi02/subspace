@@ -14,8 +14,12 @@ func SendToDingTalkGroup(message string) {
 			Content string `json:"content"`
 		} `json:"text"`
 	}
+<<<<<<< HEAD
 
 	//修改为你的dingding机器人url
+=======
+	//更换为你的钉钉机器人URL
+>>>>>>> ca7d6b3d8b8a63ff8db892c5a6b48ab4779a24f3
 	dingTalkURL := "https://oapi.dingtalk.com/robot/send?access_token=0cb614a04259e375d7a1e2a89879f06dbd8fca755d465598ca7e5673dcca2090"
 
 	dingTalkMsg := DingTalkMessage{

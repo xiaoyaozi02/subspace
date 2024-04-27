@@ -14,8 +14,12 @@ import (
 
 	"github.com/rjeczalik/notify"
 )
+<<<<<<< HEAD
 
 //更改为你日志文件的所在目录
+=======
+//更换为您日志所在的目录
+>>>>>>> ca7d6b3d8b8a63ff8db892c5a6b48ab4779a24f3
 var logDir = "/run/user/1001"
 var keyword = "Successfully"
 var startTime time.Time
