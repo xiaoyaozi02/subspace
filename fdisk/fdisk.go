@@ -38,7 +38,7 @@ func GetSubspaceMountInfo() (int, string) {
 }
 
 //计算出所有subspace硬盘的总容量
-func GetSubspaceTotalCapacity() (int, error) {
+func GetSubspaceTotalCapacity() (int64, error) {
 	// 执行 df -h 命令获取硬盘信息
 	cmd := exec.Command("df", "-h")
 	out, err := cmd.Output()
@@ -53,19 +53,31 @@ func GetSubspaceTotalCapacity() (int, error) {
 	lines := strings.Split(output, "\n")
 
 	// 计算总容量
-	totalCapacity := 0
+	var totalCapacity int64
 	for _, line := range lines {
 		if strings.Contains(line, "subspace") {
 			fields := strings.Fields(line)
 			if len(fields) >= 2 {
-				capacityStr := strings.TrimRight(fields[1], "T") // 去掉容量中的单位"T"
-				capacity, err := strconv.Atoi(capacityStr)
+				capacityStr := fields[1] // 获取容量字符串,包含单位
+				capacity, err := strconv.ParseFloat(capacityStr[:len(capacityStr)-1], 64) // 去掉单位后转换为float64
 				if err == nil {
-					totalCapacity += capacity
+					switch capacityStr[len(capacityStr)-1] { // 检查单位
+					case 'T':
+						totalCapacity += int64(capacity * 1024 * 1024 * 1024 * 1024) // 转换为bytes
+					case 'G':
+						totalCapacity += int64(capacity * 1024 * 1024 * 1024) // 转换为bytes
+					case 'M':
+						totalCapacity += int64(capacity * 1024 * 1024) // 转换为bytes
+					case 'K':
+						totalCapacity += int64(capacity * 1024) // 转换为bytes
+					}
 				}
 			}
 		}
 	}
-	
 	return totalCapacity, nil
+}
+
+func ConvertBytesToTB(bytes int64) float64 {
+    return float64(bytes) / (1024 * 1024 * 1024 * 1024)
 }

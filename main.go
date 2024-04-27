@@ -40,9 +40,11 @@ func main() {
 		fmt.Println("Error:", err)
 		return
 	}
+	totalCapacityInTB := fdisk.ConvertBytesToTB(totalCapacity)
+
 	fmt.Printf("subspace挂载硬盘数量: %d\n", mountCount)
-	fmt.Printf("subspace单个硬盘容量: %s\n", totalSize)
-	fmt.Printf("subspace硬盘总容量为: %d\n", totalCapacity)
+	fmt.Printf("subspace单个硬盘容量: %siB\n", totalSize)
+	fmt.Printf("subspace硬盘总容量为: %.2fTiB\n", totalCapacityInTB)
 
 	// 设置初始开始时间为当前时间
 	startTime = time.Now()
