@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"jk_hash/ddding"
 	"jk_hash/fdisk"
 	"jk_hash/ip"
@@ -70,6 +71,51 @@ func main() {
 	}
 }
 
+var lastPosition map[string]int64
+
+func init() {
+	lastPosition = make(map[string]int64)
+}
+
+func countKeywordOccurrences() int {
+	count := 0
+	err := filepath.Walk(logDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() && strings.HasPrefix(info.Name(), "sub") {
+			file, err := os.Open(path)
+			if err != nil {
+				return err
+			}
+			defer file.Close()
+
+			// 恢复上次统计的位置
+			lastPos, ok := lastPosition[path]
+			if ok {
+				file.Seek(lastPos, 0)
+			}
+
+			scanner := bufio.NewScanner(file)
+			for scanner.Scan() {
+				line := scanner.Text()
+				count += strings.Count(line, keyword)
+			}
+
+			// 记录当前位置
+			lastPosition[path], _ = file.Seek(0, io.SeekCurrent)
+			if err := scanner.Err(); err != nil {
+				log.Printf("Error scanning file: %v", err)
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("Error walking path: %v", err)
+	}
+	return count
+}
+
 /*
 func countKeywordOccurrences() int {
 	count := 0
@@ -102,6 +148,9 @@ func countKeywordOccurrences() int {
 }
 */
 
+//这里注释的代码会出现当日志文件重置会发送负数消息
+
+/*
 func countKeywordOccurrences() int {
 	count := 0
 	err := filepath.Walk(logDir, func(path string, info os.FileInfo, err error) error {
@@ -132,3 +181,4 @@ func countKeywordOccurrences() int {
 	}
 	return count
 }
+*/
