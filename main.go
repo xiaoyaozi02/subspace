@@ -54,10 +54,10 @@ func main() {
 	for range ticker.C {
 		// 检查是否已经过去了24小时
 		if time.Since(startTime) >= 24*time.Hour {
-			ipAddress := ip.GetLoacalIPAddresses()
-			message := fmt.Sprintf("本机IP:%v\n 24小时内爆块: %v 次 \n Local IP: %s",ipAddress, currentCount-previousCount, ipAddress)
+			ipAddress := ip.GetLoacalIPAddresses()		
+			message := fmt.Sprintf("本机IP:%v\n subspace挂载硬盘数量: %d\n subspace单个硬盘容量: %siB\n  subspace硬盘总容量为: %.2fTiB\n 24小时内爆块: %v 次 \n Local IP: %s",
+   				ipAddress,mountCount,totalSize,totalCapacityInTB,currentCount-previousCount,ipAddress)			
 			ddding.SendToDingTalkGroup(message)
-
 			// 保存当前周期的统计结果作为上一个周期的统计结果
 			previousCount = currentCount
 
