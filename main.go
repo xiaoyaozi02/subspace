@@ -52,7 +52,7 @@ func main() {
 	ticker := time.NewTicker(1 * time.Minute)
 	for range ticker.C {
 		// 检查是否已经过去了24小时
-		if time.Since(startTime) >= 2*time.Minute {
+		if time.Since(startTime) >= 24*time.Hour{
 			ipAddress := ip.GetLoacalIPAddresses()		
 			message := fmt.Sprintf("本机IP:%v\n subspace挂载硬盘数量: %d\n subspace单个硬盘容量: %siB\n  subspace硬盘总容量为: %.2fTiB\n 截止当前24小时内爆块: %v 次 \n Local IP: %s",
    				ipAddress,mountCount,totalSize,totalCapacityInTB,currentCount-previousCount,ipAddress)			
